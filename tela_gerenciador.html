@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerenciamento de Chamados</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    h1 {
+      text-align: center;
+    }
+    .filters {
+      margin-bottom: 20px;
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+    select, button {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+    table, th, td {
+      border: 1px solid #ddd;
+    }
+    th, td {
+      padding: 10px;
+      text-align: center;
+    }
+    th {
+      background-color: #f4f4f4;
+    }
+  </style>
+</head>
+<body>
+  <h1>Gerenciamento de Chamados</h1>
+
+  <!-- Filtros -->
+  <div class="filters">
+    <select id="statusFilter">
+      <option value="">Todos os Status</option>
+      <option value="Aberto">Aberto</option>
+      <option value="Em Andamento">Em Andamento</option>
+      <option value="Resolvido">Resolvido</option>
+    </select>
+    <select id="criticidadeFilter">
+      <option value="">Todas as Criticidades</option>
+      <option value="Baixa">Baixa</option>
+      <option value="Média">Média</option>
+      <option value="Alta">Alta</option>
+    </select>
+    <select id="colaboradorFilter">
+      <option value="">Todos os Colaboradores</option>
+      <!-- Lista de colaboradores será carregada dinamicamente -->
+    </select>
+    <button onclick="aplicarFiltros()">Filtrar</button>
+  </div>
+
+  <!-- Tabela -->
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Cliente</th>
+        <th>Descrição</th>
+        <th>Criticidade</th>
+        <th>Status</th>
+        <th>Colaborador</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody id="chamadosTable">
+      <!-- Dados serão carregados dinamicamente -->
+    </tbody>
+  </table>
+
+  <script>
+    // Mock de dados (poderá ser substituído por chamadas ao backend)
+    const chamados = [
+      { id: 1, cliente: "João", descricao: "Erro no sistema", criticidade: "Alta", status: "Aberto", colaborador: "Carlos" },
+      { id: 2, cliente: "Maria", descricao: "Dúvida sobre recurso", criticidade: "Média", status: "Em Andamento", colaborador: "Ana" },
+      { id: 3, cliente: "Pedro", descricao: "Solicitação de suporte", criticidade: "Baixa", status: "Resolvido", colaborador: "Lucas" }
+    ];
+
+    const colaboradores = ["Carlos", "Ana", "Lucas", "Paula"];
+
+    // Função para carregar colaboradores no filtro
+    function carregarColaboradores() {
+      const colaboradorFilter = document.getElementById('colaboradorFilter');
+      colaboradores.forEach(colab => {
+        const option = document.createElement('option');
+        option.value = colab;
+        option.textContent = colab;
+        colaboradorFilter.appendChild(option);
+      });
+    }
+
+    // Função para carregar chamados na tabela
+    function carregarChamados() {
+      const tbody = document.getElementById('chamadosTable');
+      tbody.innerHTML = "";
+      chamados.forEach(chamado => {
+        const row = `<tr>
+          <td>${chamado.id}</td>
+          <td>${chamado.cliente}</td>
+          <td>${chamado.descricao}</td>
+          <td>${chamado.criticidade}</td>
+          <td>${chamado.status}</td>
+          <td>${chamado.colaborador}</td>
+          <td>
+            <button onclick="editarChamado(${chamado.id})">Editar</button>
+          </td>
+        </tr>`;
+        tbody.innerHTML += row;
+      });
+    }
+
+    // Função para aplicar filtros
+    function aplicarFiltros() {
+      const status = document.getElementById('statusFilter').value;
+      const criticidade = document.getElementById('criticidadeFilter').value;
+      const colaborador = document.getElementById('colaboradorFilter').value;
+
+      const tbody = document.getElementById('chamadosTable');
+      tbody.innerHTML = "";
+
+      chamados.filter(chamado => {
+        return (!status || chamado.status === status) &&
+               (!criticidade || chamado.criticidade === criticidade) &&
+               (!colaborador || chamado.colaborador === colaborador);
+      }).forEach(chamado => {
+        const row = `<tr>
+          <td>${chamado.id}</td>
+          <td>${chamado.cliente}</td>
+          <td>${chamado.descricao}</td>
+          <td>${chamado.criticidade}</td>
+          <td>${chamado.status}</td>
+          <td>${chamado.colaborador}</td>
+          <td>
+            <button onclick="editarChamado(${chamado.id})">Editar</button>
+          </td>
+        </tr>`;
+        tbody.innerHTML += row;
+      });
+    }
+
+    // Função para editar chamado
+    function editarChamado(id) {
+      alert(`Editar chamado ID: ${id}`);
+      // Lógica de edição pode ser implementada aqui
+    }
+
+    // Inicializando página
+    carregarColaboradores();
+    carregarChamados();
+  </script>
+</body>
+</html>
